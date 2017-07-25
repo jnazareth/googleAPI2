@@ -1,0 +1,39 @@
+D:\personal\projects\googleAPI2>javac -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources\*;;C:\Users\U8005108\google\googleAPIs\servlet gpSheets2.java gpSheetsAPI.java
+
+D:\personal\projects\googleAPI2>jar cvmf META-INF\MANIFEST.MF gpSheets2.jar gpSheets2.class gpSheetsAPI.class
+
+D:\personal\projects\googleAPI2>java -classpath C://Users//U8005108//google//googleAPIs//sheets//*;C://Users//U8005108//google//googleAPIs//sheets//libs//*;C://Users//U8005108//google//googleAPIs//sheets//libs-sources//*;C://Users//U8005108//google//googleAPIs//servlet//*;. gpSheets2
+
+{"responses":
+	[
+		{
+			"spreadsheetId":"1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc",
+			"updatedCells":8,
+			"updatedColumns":4,
+			"updatedRange":"Sheet1!A1:D2",
+			"updatedRows":2
+		}
+	],
+	"spreadsheetId":"1ACODitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc",
+	"totalUpdatedCells":8,
+	"totalUpdatedColumns":4,
+	"totalUpdatedRows":2,
+	"totalUpdatedSheets":1
+}
+
+{"responses":
+	[
+		{
+			"spreadsheetId":"1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc",
+			"updatedCells":810,
+			"updatedColumns":16,
+			"updatedRange":"Sheet1!A1:P51",
+			"updatedRows":51
+		}
+	],
+	"spreadsheetId":"1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc",
+	"totalUpdatedCells":810,
+	"totalUpdatedColumns":16,
+	"totalUpdatedRows":51,
+	"totalUpdatedSheets":1
+}

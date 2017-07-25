@@ -1,0 +1,30 @@
+cd D:\personal\projects\googleAPI2
+
+
+javac -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources\*;;C:\Users\U8005108\google\googleAPIs\servlet gpSheets2.java gpSheetsAPI.java
+
+del *.jar
+jar cvmf META-INF\MANIFEST.MF gpSheets2.jar gpSheets2.class gpSheetsAPI.class
+jar tvf gpSheets2.jar
+
+jar cvfm gpSheets2.jar mymanifest.txt -C C:/Users/U8005108/google/googleAPIs/sheets/*;C:/Users/U8005108/google/googleAPIs/sheets/libs/*;C:/Users/U8005108/google/googleAPIs/sheets/libs-sources/* gpSheets2.class gpSheetsAPI.class
+
+jar cvfm gpSheets2.jar mymanifest.txt -C C://Users//U8005108//google//googleAPIs//sheets//* -C C://Users//U8005108//google//googleAPIs//sheets//libs//* -C C://Users//U8005108//google//googleAPIs//sheets//libs-sources//* gpSheets2.class gpSheetsAPI.class
+
+
+java -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;. gpSheets2
+java -jar gpSheets2.jar
+
+
+java -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources;. -jar gpSheets2.jar
+
+java -classpath C://Users//U8005108//google//googleAPIs//sheets//*;C://Users//U8005108//google//googleAPIs//sheets//libs//*;C://Users//U8005108//google//googleAPIs//sheets//libs-sources//*;C://Users//U8005108//google//googleAPIs//servlet//*;. gpSheets2
+
+//https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+  https://docs.google.com/spreadsheets/d/1qjGyUmxiYC3jG1knpd2NxtQY7Nl15UbD44bAOeyJ6TA/edit?usp=sharing		// Budget Tracker
+  https://docs.google.com/spreadsheets/d/12dy6WyB1xRYS9p3jO-301OZdCEG8qdqzn8y3s0EFBaQ/edit?usp=sharing		// To Do
+  https://docs.google.com/spreadsheets/d/1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc/edit?usp=sharing		// gpSheet1
+
+
+
+http://todayguesswhat.blogspot.com/2011/03/jar-manifestmf-class-path-referencing.html
