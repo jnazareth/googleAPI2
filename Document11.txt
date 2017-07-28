@@ -1,0 +1,19 @@
+requestbody:
+{
+  "values": [
+    ["x2","y2"]
+  ]
+}
+
+response:
+{
+  "spreadsheetId": "1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc",
+  "updates": {
+    "spreadsheetId": "1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc",
+    "updatedRange": "Sheet1!A1",
+    "updatedData": {
+      "range": "Sheet1!A1",
+      "majorDimension": "ROWS"
+    }
+  }
+}

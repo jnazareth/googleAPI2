@@ -1,7 +1,7 @@
 cd D:\personal\projects\googleAPI2
 
 
-javac -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources\*;;C:\Users\U8005108\google\googleAPIs\servlet gpSheets2.java gpSheetsAPI.java
+javac -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources\*;;C:\Users\U8005108\google\googleAPIs\servlet;C:\Users\U8005108\google\googleAPIs\drive\* gpSheets2.java gpSheetsAPI.java
 
 del *.jar
 jar cvmf META-INF\MANIFEST.MF gpSheets2.jar gpSheets2.class gpSheetsAPI.class
@@ -11,12 +11,7 @@ jar cvfm gpSheets2.jar mymanifest.txt -C C:/Users/U8005108/google/googleAPIs/she
 
 jar cvfm gpSheets2.jar mymanifest.txt -C C://Users//U8005108//google//googleAPIs//sheets//* -C C://Users//U8005108//google//googleAPIs//sheets//libs//* -C C://Users//U8005108//google//googleAPIs//sheets//libs-sources//* gpSheets2.class gpSheetsAPI.class
 
-
-java -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;. gpSheets2
 java -jar gpSheets2.jar
-
-
-java -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources;. -jar gpSheets2.jar
 
 java -classpath C://Users//U8005108//google//googleAPIs//sheets//*;C://Users//U8005108//google//googleAPIs//sheets//libs//*;C://Users//U8005108//google//googleAPIs//sheets//libs-sources//*;C://Users//U8005108//google//googleAPIs//servlet//*;. gpSheets2
 
@@ -28,3 +23,32 @@ java -classpath C://Users//U8005108//google//googleAPIs//sheets//*;C://Users//U8
 
 
 http://todayguesswhat.blogspot.com/2011/03/jar-manifestmf-class-path-referencing.html
+
+works:
+java -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources\*;C:\Users\U8005108\google\googleAPIs\servlet\*;C:\Users\U8005108\google\googleAPIs\drive\*;. gpSheets2
+
+
+https://accounts.google.com/o/oauth2/auth?access_type=offline&client_id=948164975124-64053egqtqrlhsskpnaka048mthmgr9n.apps.googleusercontent.com&redirect_uri=http://localhost:57824/Callback&response_type=code&scope=https://www.googleapis.com/auth/spreadsheets%20https://www.googleapis.com/auth/drive.metadata.readonly
+
+WORKING version:
+D:\personal\projects\googleAPI2>javac -classpath C:\Users\U8005108\google\google
+APIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U800510
+8\google\googleAPIs\sheets\libs-sources\*;;C:\Users\U8005108\google\googleAPIs\s
+ervlet;C:\Users\U8005108\google\googleAPIs\drive\* gpSheets2.java gpSheetsAPI.ja
+va
+Note: gpSheetsAPI.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+D:\personal\projects\googleAPI2>jar cvmf META-INF\MANIFEST.MF gpSheets2.jar gpSh
+eets2.class gpSheetsAPI.class
+added manifest
+adding: gpSheets2.class(in = 448) (out= 315)(deflated 29%)
+adding: gpSheetsAPI.class(in = 14713) (out= 6070)(deflated 58%)
+
+D:\personal\projects\googleAPI2>java -classpath C:\Users\U8005108\google\googleA
+PIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108
+\google\googleAPIs\sheets\libs-sources\*;C:\Users\U8005108\google\googleAPIs\ser
+vlet\*;C:\Users\U8005108\google\googleAPIs\drive\*;. gpSheets2
+FileList result = {"files":[]}
+
+D:\personal\projects\googleAPI2>

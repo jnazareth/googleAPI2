@@ -1,3 +1,5 @@
+//package gp;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -17,7 +19,21 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
-import com.google.api.services.sheets.v4.model.AppendValuesResponse;
+import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
+import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetResponse;
+import com.google.api.services.sheets.v4.model.UpdateSpreadsheetPropertiesRequest;
+import com.google.api.services.sheets.v4.model.SpreadsheetProperties ;
+import com.google.api.services.sheets.v4.model.Request;
+import com.google.api.services.sheets.v4.model.AddSheetRequest;
+import com.google.api.services.sheets.v4.model.DeleteSheetRequest;
+import com.google.api.services.sheets.v4.model.SheetProperties;
+import com.google.api.services.sheets.v4.model.Sheet ;
+
+import com.google.api.services.drive.DriveScopes ;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.Drive.Files.List ;
+import com.google.api.services.drive.model.FileList ;
+import com.google.api.services.drive.model.File ;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -25,11 +41,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.List;
+//import java.util.List;
 import java.util.Iterator;
 
 import java.io.BufferedReader;
-import java.io.File;
+//import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
@@ -37,42 +53,45 @@ import java.io.FileReader;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+//import javax.json.Json;
+
 public class gpSheetsAPI {
 	final java.util.logging.Logger buggyLogger = java.util.logging.Logger.getLogger(FileDataStoreFactory.class.getName());
 
-    /** Application name. */
-    private final String APPLICATION_NAME = "gpSheets";
+	/** Application name. */
+	private final String APPLICATION_NAME = "gpSheets";
 
-    /** Directory to store user credentials for this application. */
-    private final java.io.File DATA_STORE_DIR = new java.io.File(
-        System.getProperty("user.home"), ".credentials/gpSheets");
+	/** Directory to store user credentials for this application. */
+	private final java.io.File DATA_STORE_DIR = new java.io.File(
+		System.getProperty("user.home"), ".credentials/gpSheets");
 
-    /** Global instance of the {@link FileDataStoreFactory}. */
-    private FileDataStoreFactory DATA_STORE_FACTORY;
+	/** Global instance of the {@link FileDataStoreFactory}. */
+	private FileDataStoreFactory DATA_STORE_FACTORY;
 
-    /** Global instance of the JSON factory. */
-    private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+	/** Global instance of the JSON factory. */
+	private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-    /** Global instance of the HTTP transport. */
-    private HttpTransport HTTP_TRANSPORT;
+	/** Global instance of the HTTP transport. */
+	private HttpTransport HTTP_TRANSPORT;
 
-    /** Global instance of the scopes required by this quickstart.
-    *
-    * If modifying these scopes, delete your previously saved credentials
-    * at ~/.credentials/gpSheets
-    */
-    //SPREADSHEETS_READONLY | SPREADSHEETS | DRIVE_READONLY  | DRIVE_FILE  | DRIVE
-   private final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS);
+	/** Global instance of the scopes required by this quickstart.
+	*
+	* If modifying these scopes, delete your previously saved credentials
+	* at ~/.credentials/gpSheets
+	*/
+	//SPREADSHEETS_READONLY | SPREADSHEETS | DRIVE_READONLY  | DRIVE_FILE  | DRIVE
+	private final String[] arrSCOPES = { SheetsScopes.SPREADSHEETS, DriveScopes.DRIVE_METADATA_READONLY };
+	private final java.util.List<String> SCOPES = Arrays.asList(arrSCOPES);
 
-   /**
-    * Creates an authorized Credential object.
-    * @return an authorized Credential object.
-    * @throws IOException
-    */
-   private Credential authorize() throws IOException {
+	/**
+	* Creates an authorized Credential object.
+	* @return an authorized Credential object.
+	* @throws IOException
+	*/
+	private Credential authorize() throws IOException {
 		//System.out.println("Credential::authorize()");
 
-       // Load client secrets.
+		// Load client secrets.
 		//System.out.println("Load client secrets");
 		InputStream in = gpSheets2.class.getResourceAsStream("client_secret.json");
 		if (in == null) System.out.println("InputStream::in: NULL");
@@ -80,55 +99,182 @@ public class gpSheetsAPI {
 
 		buggyLogger.setLevel(java.util.logging.Level.SEVERE);
 
-       try {
-           HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-           DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-       } catch (Throwable t) {
-           t.printStackTrace();
-           System.exit(1);
-       }
+		try {
+			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+			DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			System.exit(1);
+		}
 
-       // Build flow and trigger user authorization request.
-       GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-               .setDataStoreFactory(DATA_STORE_FACTORY)
-               .setAccessType("offline")
-               .build();
-       Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
-       //System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
-       return credential;
-   }
+		// Build flow and trigger user authorization request.
+		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+				.setDataStoreFactory(DATA_STORE_FACTORY)
+				.setAccessType("offline")
+				.build();
+		Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+		//System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+		return credential;
+	}
 
-   /**
-    * Build and return an authorized Sheets API client service.
-    * @return an authorized Sheets API client service
-    * @throws IOException
-    */
-   private Sheets getSheetsService() throws IOException {
-       Credential credential = authorize();
-       return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-               .setApplicationName(APPLICATION_NAME)
-               .build();
-   }
+	/**
+	* Build and return an authorized Sheets API client service.
+	* @return an authorized Sheets API client service
+	* @throws IOException
+	*/
+	private Sheets getSheetsService() throws IOException {
+		Credential credential = authorize();
+		return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+				.setApplicationName(APPLICATION_NAME)
+				.build();
+	}
+
+	/**
+	* Build and return an authorized Drive API client service.
+	* @return an authorized Drive API client service
+	* @throws IOException
+	*/
+	private Drive getDriveService() throws IOException {
+		//credentials = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES));
+		Credential credential = authorize();
+		return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+				.setApplicationName(APPLICATION_NAME)
+				.build();
+	}
 
 	private Sheets createSheetsService() throws IOException, GeneralSecurityException {
-	    HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-	    JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+		HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+		JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
-	    // TODO: Change placeholder below to generate authentication credentials. See
-	    // https://developers.google.com/sheets/quickstart/java#step_3_set_up_the_sample
-	    //
-	    // Authorize using one of the following scopes:
-	    //   "https://www.googleapis.com/auth/drive"
-	    //   "https://www.googleapis.com/auth/drive.file"
-	    //   "https://www.googleapis.com/auth/spreadsheets"
-	    GoogleCredential credential = null;
+		// TODO: Change placeholder below to generate authentication credentials. See
+		// https://developers.google.com/sheets/quickstart/java#step_3_set_up_the_sample
+		//
+		// Authorize using one of the following scopes:
+		//	"https://www.googleapis.com/auth/drive"
+		//	"https://www.googleapis.com/auth/drive.file"
+		//	"https://www.googleapis.com/auth/spreadsheets"
+		GoogleCredential credential = null;
 
-	    return new Sheets.Builder(httpTransport, jsonFactory, credential)
-	        .setApplicationName(APPLICATION_NAME)
-	        .build();
+		return new Sheets.Builder(httpTransport, jsonFactory, credential)
+			.setApplicationName(APPLICATION_NAME)
+			.build();
 	  }
 
-	private List<List<Object>> getData2()
+	public void addGPSheetJSON()
+	{	/*
+		{	// 1
+		  "requests": [	// 2
+			{	// 2.1
+			  "updateSheetProperties": {	// 2.1.1
+				"properties": {		// 2.2.1.1
+					"sheetId": 0, "title": "New Sheet Name"},
+				"fields": "title"
+			  }	// 2.1.1
+			}	// 2.1
+		  ]	// 2
+		}	// 1
+
+		try {
+			JsonBuilderFactory factory = Json.createBuilderFactory(); //config
+			JsonObject value = factory.createObjectBuilder()		// 1
+					 .add("requests", factory.createArrayBuilder() 	// 2
+						 .add(factory.createObjectBuilder()		// 2.1
+							.add("updateSheetProperties", factory.createObjectBuilder() 	// 2.1.1
+								.add("properties", factory.createObjectBuilder() 	// 2.1.1.1
+								 .add("sheetId", 0)
+								 .add("title", "New York")
+							) // 2.1.1.1
+						.add("fields", "title")
+					) // 2.1.1
+				) // 2.1
+			) // 2
+			.build() ; // 1
+		} catch (Exception ioe) {
+			System.err.println("error:" + ioe.getMessage());
+		}
+		*/
+	}
+
+
+	public void addGPSheet()
+	{
+		try {
+			// Build a new authorized API client service.
+			Sheets service = getSheetsService();
+
+			// The ID of the spreadsheet to update.
+			String spreadsheetId = "1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc";
+
+			String spreadsheetTitle = "gpSheet1" ;
+			String fieldMask = "title" ;
+
+			java.util.List<Request> requests = new ArrayList<>();
+
+			/* tested & works
+			// Change the spreadsheet's title.
+			requests.add(new Request()
+				.setUpdateSpreadsheetProperties(new UpdateSpreadsheetPropertiesRequest()
+					.setProperties(new SpreadsheetProperties()
+				.setTitle(spreadsheetTitle))
+			.setFields(fieldMask)));
+			*/
+
+			/* untested
+			// Find and replace text.
+			requests.add(new Request()
+					.setFindReplace(new FindReplaceRequest()
+						.setFind(find)
+						.setReplacement(replacement)
+						.setAllSheets(true)));
+			*/
+
+			// add new sheet
+			String sheetTitle = "default" ;
+			int	idToDelete = -1 ;
+
+			//locate sheet ID
+			Spreadsheet sheetsResponse = service.spreadsheets().get(spreadsheetId).execute() ;
+			//System.out.println(sheetsResponse);
+
+			java.util.List<Sheet> values = sheetsResponse.getSheets();
+			if (values == null || values.size() == 0) {
+				System.out.println("No data found.");
+			} else {
+				Iterator<Sheet> sheetIterator = values.iterator();
+				while (sheetIterator.hasNext()) {
+					SheetProperties sp = sheetIterator.next().getProperties() ;
+					System.out.print("sp.getTitle(): " + sp.getTitle() + ", getSheetId():" + sp.getSheetId());
+
+					if (sheetTitle.equals(sp.getTitle()))
+					{
+						idToDelete = sp.getSheetId() ;
+						System.out.print("idToDelete: " + idToDelete);
+						break ;
+					}
+				}
+			}
+
+			if (idToDelete != -1) {
+			requests.add(new Request()
+				.setDeleteSheet(new DeleteSheetRequest()
+					.setSheetId(idToDelete)));
+			}
+
+			requests.add(new Request()
+				.setAddSheet(new AddSheetRequest()
+					.setProperties(new SheetProperties()
+					.setTitle(sheetTitle))));
+
+			BatchUpdateSpreadsheetRequest request = new BatchUpdateSpreadsheetRequest().setRequests(requests);
+			BatchUpdateSpreadsheetResponse response = service.spreadsheets().batchUpdate(spreadsheetId, request).execute();
+
+			System.out.println(response);
+		} catch (Exception ioe) {
+			System.err.println("error:" + ioe.getMessage());
+		}
+	}
+
+	private java.util.List<java.util.List<Object>> getData2()
 	{
 		// declarations
 		// constants
@@ -138,12 +284,12 @@ public class gpSheetsAPI {
 
 		// members
 		Hashtable<String, ArrayList<String>> m_exportLinesGroup ;
-		List<List<Object>> m_SheetsData = null ;
+		java.util.List<java.util.List<Object>> m_SheetsData = null ;
 
 		// open file
 		FileReader fileReader = null;
 		try {
-			File aFile = new File(fileName);
+			java.io.File aFile = new java.io.File(fileName);
 			if (!aFile.exists()) throw new FileNotFoundException("File  " + fileName + " does not exist.");
 
 			//read file
@@ -162,11 +308,11 @@ public class gpSheetsAPI {
 				buffReader.close() ;	fileReader.close() ;
 
 				// load List from Hashtable
-				m_SheetsData = new ArrayList<List<Object>>() ;
+				m_SheetsData = new ArrayList<java.util.List<Object>>() ;
 				ArrayList<String> exportLines = m_exportLinesGroup.get(group) ;
 				if (exportLines == null) System.err.println("exportLines == null");
 				for (String aLine : exportLines) {
-					List<Object> aRow = new ArrayList<Object>();
+					java.util.List<Object> aRow = new ArrayList<Object>();
 					String[] pieces = aLine.split(READ_SEPARATOR);
 					for (String p : pieces) aRow.add(p);	// add each item as a column item
 					m_SheetsData.add(aRow);					// add full row
@@ -182,20 +328,20 @@ public class gpSheetsAPI {
 	}
 
 
-	private List<List<Object>> getData ()  {
-		List<Object> R1 = new ArrayList<Object>();
+	private java.util.List<java.util.List<Object>> getData ()  {
+		java.util.List<Object> R1 = new ArrayList<Object>();
 		R1.add ("A1");
 		R1.add ("B1");
 		R1.add ("C1");
 		R1.add ("D1");
 
-		List<Object> R2 = new ArrayList<Object>();
+		java.util.List<Object> R2 = new ArrayList<Object>();
 		R2.add ("A2");
 		R2.add ("B2");
 		R2.add ("C2");
 		R2.add ("D2");
 
-		List<List<Object>> data = new ArrayList<List<Object>>();
+		java.util.List<java.util.List<Object>> data = new ArrayList<java.util.List<Object>>();
 		data.add (R1);
 		data.add (R2);
 
@@ -206,7 +352,7 @@ public class gpSheetsAPI {
 	{
 		try {
 			// Build a new authorized API client service.
-		    Sheets service = getSheetsService();
+			Sheets service = getSheetsService();
 
 			// The ID of the spreadsheet to update.
 			String spreadsheetId = "1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc";
@@ -214,13 +360,13 @@ public class gpSheetsAPI {
 			//String range = RowStart+":"+RowEnd;
 			String range = "Sheet1"; //"Sheet1!A1"	"Sheet1!A1:B1";
 
-			List<List<Object>> arrData = getData2();
+			java.util.List<java.util.List<Object>> arrData = getData2();
 
 			ValueRange requestBody = new ValueRange();
 			requestBody.setRange(range);
 			requestBody.setValues(arrData);
 
-			List<ValueRange> oList = new ArrayList<>();
+			java.util.List<ValueRange> oList = new ArrayList<>();
 			oList.add(requestBody);
 
 			BatchUpdateValuesRequest request = new BatchUpdateValuesRequest();
@@ -232,10 +378,42 @@ public class gpSheetsAPI {
 
 			BatchUpdateValuesResponse response = service.spreadsheets().values().batchUpdate(spreadsheetId, request).execute();
 			System.out.println(response);
-
 		} catch (Exception ioe) {
 			System.err.println("error:" + ioe.getMessage());
-	    }
+		}
+	}
+
+	public void locateGPSheet(String sheetName)
+	{
+		try {
+			Drive driveService = getDriveService() ;
+
+			// Build a new authorized API client service.
+			//Sheets service = getSheetsService();
+
+			Drive.Files.List request = driveService.files().list()
+						.setPageSize(10)
+						// Available Query parameters here:
+						//https://developers.google.com/drive/v3/web/search-parameters
+						.setQ("mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false" + " and name = " + "\'" + sheetName + "\'") //and name contains 'gpSheets1'
+						.setFields("nextPageToken, files(id, name)");
+
+			FileList result = request.execute();
+			System.out.println("FileList result = " + result);
+
+			java.util.List<File> files = result.getFiles();
+			String spreadsheetId = null;
+			if (files != null) {
+				for (File file : files) {
+					if (file.getName().equals(sheetName)) {
+						spreadsheetId = file.getId();
+						System.out.println("sheetName = " + sheetName + " ,spreadsheetId = " + spreadsheetId);
+					}
+				}
+			}
+		} catch (Exception ioe) {
+			System.err.println("error:" + ioe.getMessage());
+		}
 	}
 
 	public void writeGPSheet()
@@ -254,7 +432,7 @@ public class gpSheetsAPI {
 			System.out.println(response);
 		} catch (Exception ioe) {
 			System.err.println("error:" + ioe.getMessage());
-	    }
+		}
 	}
 
 	public void readGPSheet()
@@ -290,11 +468,11 @@ public class gpSheetsAPI {
 			//Sheets.Spreadsheets.Get request = service.spreadsheets().values().get(spreadsheetId);
 			//System.out.println("request:" + request.toString());
 			ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute() ;
-			//System.out.println(response);
+			System.out.println(response);
 
 			/*
 			//request.setRanges(range);
-    		request.setIncludeGridData(includeGridData);
+			request.setIncludeGridData(includeGridData);
 
 			//Spreadsheet response = request.execute();
 			//ValueRange response = request.execute();
@@ -307,14 +485,14 @@ public class gpSheetsAPI {
 				.execute();
 			*/
 
-			List<List<Object>> values = response.getValues();
+			java.util.List<java.util.List<Object>> values = response.getValues();
 			if (values == null || values.size() == 0) {
 				System.out.println("No data found.");
 			} else {
 			  //System.out.println("Name, Budget, Balance, Actual, Actual Balance, Diff"); 	// budgeting
 			  System.out.println("Date, Item, Desc, , , Amt");								// rima
 			  //System.out.println("Indian store,	Sams,	aldis, 	Tj  maxx,	Walmart,	Ikea,	chinese store, 	$ store");	// toDo
-			  for (List row : values) {
+			  for (java.util.List row : values) {
 				Iterator<String> sheetRowIterator = row.iterator();
 				while (sheetRowIterator.hasNext()) {
 					System.out.print(sheetRowIterator.next() + ",");
@@ -324,7 +502,7 @@ public class gpSheetsAPI {
 			} // else
 		} catch (Exception ioe) {
 			System.err.println("error:" + ioe.getMessage());
-	    }
+		}
 	}
 
 
