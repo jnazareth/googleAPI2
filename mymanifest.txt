@@ -1,2 +1,0 @@
-Main-Class: gpSheets2
-Class-Path: C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources;.

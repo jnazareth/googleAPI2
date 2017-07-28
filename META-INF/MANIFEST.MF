@@ -1,3 +1,5 @@
+Manifest-Version: 2.0
+Created-By: John Nazareth
 Main-Class: gpSheets2
-Class-Path: C://Users//U8005108//google//googleAPIs//sheets//*;C://Users//U8005108//google//googleAPIs//sheets//libs//*;C://Users//U8005108//google//googleAPIs//sheets//libs-sources//*;C://Users//U8005108//google//googleAPIs//servlet//*;.
+Class-Path: . C:/Users/U8005108/google/googleAPIs/sheets/ C:/Users/U8005108/google/googleAPIs/sheets/libs/ C:/Users/U8005108/google/googleAPIs/sheets/libs-sources/ C:/Users/U8005108/google/googleAPIs/servlet/ C:/Users/U8005108/google/googleAPIs/drive/google-api-services-drive-v3-rev77-1.22.0.jar C:/Users/U8005108/google/googleAPIs/drive/libs C:/Users/U8005108/google/googleAPIs/drive/libs-sources 
 

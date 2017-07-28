@@ -1,3 +1,5 @@
+//package gp;
+
 /*
  * BEFORE RUNNING:
  * ---------------
@@ -15,9 +17,11 @@ public class gpSheets2 {
 	public static void main(String[] args) {
 		try {
 			gpSheetsAPI mySheets = new gpSheetsAPI() ;
+			mySheets.locateGPSheet("gpSheet1");
 			//mySheets.readGPSheet() ;
 			//mySheets.writeGPSheet() ;
-			mySheets.updateGPSheet() ;
+			//mySheets.updateGPSheet() ;
+			//mySheets.addGPSheet() ;
 		} catch (Exception ioe) {
 		}
 	}

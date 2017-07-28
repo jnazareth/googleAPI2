@@ -1,5 +1,7 @@
 D:\personal\projects\googleAPI2>javac -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources\*;;C:\Users\U8005108\google\googleAPIs\servlet gpSheets2.java gpSheetsAPI.java
 
+D:\personal\projects\googleAPI2>javac -classpath C:\Users\U8005108\google\googleAPIs\sheets\*;C:\User\U8005108\google\googleAPIs\sheets\libs\*;C:\Users\U8005108\google\googleAPIs\sheets\libs-sources\*;;C\Users\U8005108\google\googleAPIs\servlet;C:\Users\U8005108\google\googleAPIs\json\*;. gpSheets2.java gpSheetsAPI.jav
+
 D:\personal\projects\googleAPI2>jar cvmf META-INF\MANIFEST.MF gpSheets2.jar gpSheets2.class gpSheetsAPI.class
 
 D:\personal\projects\googleAPI2>java -classpath C://Users//U8005108//google//googleAPIs//sheets//*;C://Users//U8005108//google//googleAPIs//sheets//libs//*;C://Users//U8005108//google//googleAPIs//sheets//libs-sources//*;C://Users//U8005108//google//googleAPIs//servlet//*;. gpSheets2

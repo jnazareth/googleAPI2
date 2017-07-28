@@ -1,0 +1,55 @@
+D:\personal\projects\googleAPI2>java -classpath C:\Users\U8005108\google\googleA
+PIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;. gpSheets2
+
+{"properties":{"autoRecalc":"ON_CHANGE","defaultFormat":{"backgroundColor":{"blue":1.0,"green":1.0,"red":1.0},"padding":{"bottom":2,"left":3,"right":3,"top":2},"textFormat":{"bold":false,"fontFamily":"arial,sans,sans-serif","fontSize":10,"foregroundColor":{},"italic":false,"strikethrough":false,"underline":false},"verticalAlignment":"BOTTOM","wrapStrategy":"OVERFLOW_CELL"},"locale":"en_US","timeZone":"Etc/GMT","title":"Untitled spreadsheet"},"sheets":[{"properties":{"gridProperties":{"columnCount":26,"rowCount":1000},"index":0,"sheetId":0,"sheetType":"GRID","title":"Sheet1"}}],"spreadsheetId":"1lx31frm2tMJG5903_KnOndgmFVdz1wL6utRH03XRAbA","spreadsheetUrl":"https://docs.google.com/spreadsheets/d/1lx31frm2tMJG5903_KnOndgmFVdz1wL6utRH03XRAbA/edit"}
+
+D:\personal\projects\googleAPI2>java -classpath C:\Users\U8005108\google\googleA
+PIs\sheets\*;C:\Users\U8005108\google\googleAPIs\sheets\libs\*;. gpSheets2
+
+addgpSheet
+Spreadsheet response = service.spreadsheets().get(spreadsheetId).execute() ;
+System.out.println(response);
+GET:
+-------------------------------------------------------------
+{
+	"properties":
+		{"autoRecalc":"ON_CHANGE",
+		"defaultFormat":
+			{"backgroundColor":
+				{"blue":1.0,"green":1.0,"red":1.0},
+	"padding":
+		{"bottom":2,"left":3,"right":3,"top":2},
+		"textFormat":
+			{
+				"bold":false,
+				"fontFamily":"arial,sans,sans-serif",
+				"fontSize":10,
+				"foregroundColor"{},
+				"italic":false,
+				"strikethrough":false,
+				"underline":false
+			},
+			"verticalAlignment":"BOTTOM",
+			"wrapStrategy":"OVERFLOW_CELL"
+			},
+			"locale":"en_US",
+			"timeZone":"Etc/GMT",
+			"title":"gpSheet1"
+		},
+	"sheets":
+	[
+		{
+			"properties":
+			{
+				"gridProperties":
+					{"columnCount":26,"rowCount":1003},
+					"index":0,
+					"sheetId":0,
+					"sheetType":"GRID",
+					"title":"Sheet1"
+			}
+		}
+	],
+	"spreadsheetId":"1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc",
+	"spreadsheetUrl":"https://docs.google.com/spreadsheets/d/1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc/edit"
+}
