@@ -17,11 +17,14 @@ public class gpSheets2 {
 	public static void main(String[] args) {
 		try {
 			gpSheetsAPI mySheets = new gpSheetsAPI() ;
-			mySheets.locateGPSheet("gpSheet1");
-			//mySheets.readGPSheet() ;
-			//mySheets.writeGPSheet() ;
+			mySheets.addPivot();
+			//mySheets.getBoundaryGPSheet();
+			//mySheets.formatGPSheet();
+			//mySheets.locateGPSheet("gpSheet1");
 			//mySheets.updateGPSheet() ;
+			//mySheets.readGPSheet() ;
 			//mySheets.addGPSheet() ;
+			//mySheets.writeGPSheet() ;
 		} catch (Exception ioe) {
 		}
 	}

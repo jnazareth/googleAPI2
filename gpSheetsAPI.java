@@ -28,6 +28,21 @@ import com.google.api.services.sheets.v4.model.AddSheetRequest;
 import com.google.api.services.sheets.v4.model.DeleteSheetRequest;
 import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Sheet ;
+import com.google.api.services.sheets.v4.Sheets.Spreadsheets.BatchUpdate ;
+import com.google.api.services.sheets.v4.model.UpdateCellsRequest ;
+import com.google.api.services.sheets.v4.model.RowData ;
+import com.google.api.services.sheets.v4.model.PivotTable ;
+import com.google.api.services.sheets.v4.model.PivotGroup ;
+import com.google.api.services.sheets.v4.model.PivotValue ;
+import com.google.api.services.sheets.v4.model.GridCoordinate ;
+
+
+import com.google.api.services.sheets.v4.model.RepeatCellRequest ;
+import com.google.api.services.sheets.v4.model.GridRange ;
+import com.google.api.services.sheets.v4.model.CellData ;
+import com.google.api.services.sheets.v4.model.CellFormat ;
+import com.google.api.services.sheets.v4.model.NumberFormat ;
+import com.google.api.services.sheets.v4.model.ExtendedValue ;
 
 import com.google.api.services.drive.DriveScopes ;
 import com.google.api.services.drive.Drive;
@@ -94,7 +109,7 @@ public class gpSheetsAPI {
 		// Load client secrets.
 		//System.out.println("Load client secrets");
 		InputStream in = gpSheets2.class.getResourceAsStream("client_secret.json");
-		if (in == null) System.out.println("InputStream::in: NULL");
+		if (in == null) System.out.println("client_secret.json: Key not found. InputStream::in: NULL");
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
 		buggyLogger.setLevel(java.util.logging.Level.SEVERE);
@@ -159,6 +174,126 @@ public class gpSheetsAPI {
 			.setApplicationName(APPLICATION_NAME)
 			.build();
 	  }
+
+	public void addPivot()
+	{
+		try {
+			// Build a new authorized API client service.
+			Sheets service = getSheetsService();
+
+			// The ID of the spreadsheet to update.
+			String spreadsheetId = "1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc";
+			final int sheetIDSheet1 = 0 ;
+			final int sheetIDDefault = 1417346082 ;
+
+			String sortOrder = "ASCENDING" ;
+			/*
+			java.util.List<PivotGroup> pivotColumnsList = new ArrayList<>();
+			pivotColumnsList.add(new PivotGroup()
+				.setSourceColumnOffset(8)
+				.setSortOrder(sortOrder)
+				.setShowTotals(false)
+			) ;
+			*/
+
+			// y-axis / rows of pivot
+			java.util.List<PivotGroup> pivotRowsList = new ArrayList<>();
+			pivotRowsList.add(new PivotGroup()
+				.setSourceColumnOffset(0)
+				.setSortOrder(sortOrder)
+				.setShowTotals(true)
+			) ;
+
+			String summarizeFunction = "SUM" ;
+			// x-axis / columns of pivot
+			java.util.List<PivotValue> pivotValuesList = new ArrayList<>();
+			pivotValuesList.add(new PivotValue()
+				.setSummarizeFunction(summarizeFunction)
+				.setSourceColumnOffset(7)
+			) ;
+			pivotValuesList.add(new PivotValue()
+				.setSummarizeFunction(summarizeFunction)
+				.setSourceColumnOffset(8)
+			) ;
+
+			// data source of pivot
+			int sheetID = sheetIDSheet1 ;
+			String valueLayout = "HORIZONTAL";
+			PivotTable aPivotTable = new PivotTable() ;
+			aPivotTable.setSource(new GridRange()
+				.setSheetId(sheetID)
+				.setStartRowIndex(1)
+				.setStartColumnIndex(1)
+				.setEndRowIndex(51)
+				.setEndColumnIndex(10)
+			);
+			//aPivotTable.setColumns(pivotColumnsList) ;
+			aPivotTable.setRows(pivotRowsList) ;
+			aPivotTable.setValues(pivotValuesList) ;
+			aPivotTable.setValueLayout(valueLayout) ;
+
+			java.util.List<CellData> cellDataList = new ArrayList<>();
+			cellDataList.add(new CellData()
+				.setPivotTable(aPivotTable)
+			) ;
+			java.util.List<RowData> rowDataList = new ArrayList<>();
+			rowDataList.add(new RowData()
+				.setValues(cellDataList)
+			) ;
+
+			String fieldMask = "pivotTable" ;
+			java.util.List<Request> requests = new ArrayList<>();
+			requests.add(new Request()								// 1
+				.setUpdateCells(new UpdateCellsRequest()			// 2
+					.setRows(rowDataList)
+					.setStart(new GridCoordinate()
+						.setSheetId(sheetID)
+						.setRowIndex(53)
+						.setColumnIndex(1)
+					)
+					.setFields(fieldMask)
+				)													// 2
+			) ;														// 1
+
+			BatchUpdateSpreadsheetRequest request = new BatchUpdateSpreadsheetRequest().setRequests(requests);
+			BatchUpdateSpreadsheetResponse response = service.spreadsheets().batchUpdate(spreadsheetId, request).execute();
+
+			System.out.println(response);
+		} catch (Exception ioe) {
+			System.err.println("error:" + ioe.getMessage());
+		}
+	}
+
+	public void getBoundaryGPSheet()
+	{
+		try {
+			// Build a new authorized API client service.
+			Sheets service = getSheetsService();
+
+			String spreadsheetId = "1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc";
+			String range = "Sheet1!A1:Z";
+
+			// True if grid data should be returned.
+			// This parameter is ignored if a field mask was set in the request.
+			boolean includeGridData = false;
+
+			ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute() ;
+			//System.out.println(response);
+
+			java.util.List<java.util.List<Object>> values = response.getValues();
+			if (values == null || values.size() == 0) {
+				System.out.println("No data found.");
+			} else {
+			  int nMaxCol = 0 ;
+			  for (java.util.List row : values) {
+				  if (row.size() > nMaxCol) nMaxCol = row.size() ;
+			  } // for
+			  System.out.println("MaxRow = " + values.size() + ", MaxCol = " + nMaxCol);
+			} // else
+		} catch (Exception ioe) {
+			System.err.println("error:" + ioe.getMessage());
+		}
+	}
 
 	public void addGPSheetJSON()
 	{	/*
@@ -229,7 +364,7 @@ public class gpSheetsAPI {
 			*/
 
 			// add new sheet
-			String sheetTitle = "default" ;
+			String sheetTitle = "default2" ;
 			int	idToDelete = -1 ;
 
 			//locate sheet ID
@@ -243,12 +378,12 @@ public class gpSheetsAPI {
 				Iterator<Sheet> sheetIterator = values.iterator();
 				while (sheetIterator.hasNext()) {
 					SheetProperties sp = sheetIterator.next().getProperties() ;
-					System.out.print("sp.getTitle(): " + sp.getTitle() + ", getSheetId():" + sp.getSheetId());
+					System.out.println("sp.getTitle(): " + sp.getTitle() + ", getSheetId():" + sp.getSheetId());
 
 					if (sheetTitle.equals(sp.getTitle()))
 					{
 						idToDelete = sp.getSheetId() ;
-						System.out.print("idToDelete: " + idToDelete);
+						System.out.println("idToDelete: " + idToDelete);
 						break ;
 					}
 				}
@@ -415,6 +550,86 @@ public class gpSheetsAPI {
 			System.err.println("error:" + ioe.getMessage());
 		}
 	}
+
+
+	public void formatGPSheet()
+	{
+		try {
+			// Build a new authorized API client service.
+			Sheets service = getSheetsService();
+
+			// The ID of the spreadsheet to update.
+			String spreadsheetId = "1ACO-DitYe4g9oxa8QcSNjUfnhiWcSvvvXO-5YCWidQc";
+
+			//String range = RowStart+":"+RowEnd;
+			String range = "Sheet1!K"; //"Sheet1!A1"	"Sheet1!A1:B1";
+
+
+			java.util.List<Request> requests = new ArrayList<>();
+
+			final int sheetIDSheet1 = 0 ;
+			final int sheetIDDefault = 1417346082 ;
+			int sheetID = sheetIDSheet1 ; 		// Sheet1
+			String fieldMask = "userEnteredFormat.numberFormat" ;
+			String sType = "NUMBER"; ;
+			String sPattern = "" ;
+
+			sheetID = 0; 	// Sheet1
+			//sPattern = "#,##0.00" ;
+			sPattern = "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)" ;
+
+			requests.add(new Request()								// 1
+				.setRepeatCell(new RepeatCellRequest()				// 2
+					.setRange(new GridRange()						// 3
+						.setSheetId(sheetID)
+						.setStartRowIndex(2)
+						.setStartColumnIndex(4)
+						.setEndRowIndex(51)
+						.setEndColumnIndex(16)
+					)												// 3
+					.setCell(new CellData()							// 4
+						.setUserEnteredFormat(new CellFormat()		// 5
+							.setNumberFormat(new NumberFormat()		// 6
+								.setType(sType)
+								.setPattern(sPattern)
+							)										// 6
+						)											// 5
+					)												// 4
+				.setFields(fieldMask)
+				)													// 2
+			);														// 1
+
+			sheetID = sheetIDDefault; 	// default
+			fieldMask = "userEnteredValue" ;
+			String sFormulaValue = "= A1 + 1" ;
+
+			requests.add(new Request()								// 1
+				.setRepeatCell(new RepeatCellRequest()				// 2
+					.setRange(new GridRange()						// 3
+						.setSheetId(sheetID)
+						.setStartRowIndex(1)
+						.setStartColumnIndex(0)
+						.setEndRowIndex(6)
+						.setEndColumnIndex(3)
+					)												// 3
+					.setCell(new CellData()							// 4
+						.setUserEnteredValue(new ExtendedValue()	// 5
+							.setFormulaValue(sFormulaValue)
+						)											// 5
+					)												// 4
+				.setFields(fieldMask)
+				)													// 2
+			);														// 1
+
+			BatchUpdateSpreadsheetRequest request = new BatchUpdateSpreadsheetRequest().setRequests(requests);
+			BatchUpdateSpreadsheetResponse response = service.spreadsheets().batchUpdate(spreadsheetId, request).execute();
+
+			System.out.println(response);
+		} catch (Exception ioe) {
+			System.err.println("error:" + ioe.getMessage());
+		}
+	}
+
 
 	public void writeGPSheet()
 	{
